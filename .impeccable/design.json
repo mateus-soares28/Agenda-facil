@@ -1,0 +1,22 @@
+{
+  "$schema": "https://design-tokens.github.io/community-group/format/",
+  "agenda-facil": {
+    "color": {
+      "petroleum": { "$type": "color", "$value": "#103D3A" },
+      "petroleum-deep": { "$type": "color", "$value": "#0A302F" },
+      "canvas": { "$type": "color", "$value": "#F6F8F7" },
+      "surface": { "$type": "color", "$value": "#FFFFFF" },
+      "ink": { "$type": "color", "$value": "#1C2928" },
+      "muted": { "$type": "color", "$value": "#697775" },
+      "sport-green": { "$type": "color", "$value": "#26714B" },
+      "border": { "$type": "color", "$value": "#E7EDEB" }
+    },
+    "font": {
+      "ui": { "$type": "fontFamily", "$value": "Segoe UI, Arial, Helvetica, sans-serif" }
+    },
+    "radius": {
+      "control": { "$type": "dimension", "$value": "7px" },
+      "surface": { "$type": "dimension", "$value": "10px" }
+    }
+  }
+}

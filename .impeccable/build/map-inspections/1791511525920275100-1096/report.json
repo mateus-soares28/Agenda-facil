@@ -1,0 +1,1854 @@
+{
+  "tool": "comp-spec inspect-map",
+  "version": 1,
+  "referenceOnly": true,
+  "stateChanged": false,
+  "comp": ".impeccable/mocks/dashboard-c.png",
+  "compSize": {
+    "width": 1536,
+    "height": 1024
+  },
+  "inputRegionCount": 32,
+  "regions": [
+    {
+      "id": "sidebar",
+      "kind": "chrome",
+      "note": "Petroleum-green application sidebar with brand, workspace switcher, navigation, and teacher profile.",
+      "grid": null,
+      "container": true,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "w": 0.146,
+        "h": 1
+      },
+      "px": {
+        "x": 0,
+        "y": 0,
+        "w": 224,
+        "h": 1024
+      },
+      "aspect": 0.2188,
+      "palette": [
+        {
+          "hex": "#093838",
+          "coverage": 0.9772
+        },
+        {
+          "hex": "#e9f0f0",
+          "coverage": 0.0097
+        },
+        {
+          "hex": "#08212d",
+          "coverage": 0.0056
+        },
+        {
+          "hex": "#3e5e5e",
+          "coverage": 0.0054
+        },
+        {
+          "hex": "#899999",
+          "coverage": 0.0021
+        }
+      ],
+      "detail": {
+        "energy": 8.1342
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 1,
+      "cropPath": "region-1.png"
+    },
+    {
+      "id": "brand",
+      "kind": "text",
+      "note": "Agenda Fácil wordmark in the upper left of the sidebar.",
+      "grid": null,
+      "parentId": "sidebar",
+      "box": {
+        "x": 0.02,
+        "y": 0.043,
+        "w": 0.095,
+        "h": 0.047
+      },
+      "px": {
+        "x": 31,
+        "y": 44,
+        "w": 146,
+        "h": 48
+      },
+      "aspect": 3.0417,
+      "palette": [
+        {
+          "hex": "#164646",
+          "coverage": 0.9526
+        },
+        {
+          "hex": "#608381",
+          "coverage": 0.0158
+        },
+        {
+          "hex": "#d8e6e5",
+          "coverage": 0.0132
+        },
+        {
+          "hex": "#2e6436",
+          "coverage": 0.0105
+        },
+        {
+          "hex": "#d8ed3d",
+          "coverage": 0.0079
+        }
+      ],
+      "detail": {
+        "energy": 12.4385
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 2,
+      "cropPath": "region-2.png"
+    },
+    {
+      "id": "sidebar-nav",
+      "kind": "control",
+      "note": "Vertical primary navigation for overview, agenda, students, finance, billing, and settings.",
+      "grid": null,
+      "parentId": "sidebar",
+      "box": {
+        "x": 0.018,
+        "y": 0.18,
+        "w": 0.116,
+        "h": 0.47
+      },
+      "px": {
+        "x": 28,
+        "y": 184,
+        "w": 178,
+        "h": 481
+      },
+      "aspect": 0.3701,
+      "palette": [
+        {
+          "hex": "#083737",
+          "coverage": 0.9406
+        },
+        {
+          "hex": "#e7eeee",
+          "coverage": 0.0181
+        },
+        {
+          "hex": "#4f6d6d",
+          "coverage": 0.0176
+        },
+        {
+          "hex": "#09202b",
+          "coverage": 0.0157
+        },
+        {
+          "hex": "#acbbbb",
+          "coverage": 0.0079
+        }
+      ],
+      "detail": {
+        "energy": 13.5429
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 3,
+      "cropPath": "region-3.png"
+    },
+    {
+      "id": "topbar",
+      "kind": "chrome",
+      "note": "White top bar with breadcrumbs, search affordance, profile avatar, and page heading.",
+      "grid": null,
+      "container": true,
+      "box": {
+        "x": 0.146,
+        "y": 0,
+        "w": 0.854,
+        "h": 0.105
+      },
+      "px": {
+        "x": 224,
+        "y": 0,
+        "w": 1312,
+        "h": 108
+      },
+      "aspect": 12.1481,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.9255
+        },
+        {
+          "hex": "#083737",
+          "coverage": 0.0517
+        },
+        {
+          "hex": "#090d22",
+          "coverage": 0.0127
+        },
+        {
+          "hex": "#556e6e",
+          "coverage": 0.0055
+        },
+        {
+          "hex": "#616676",
+          "coverage": 0.0046
+        }
+      ],
+      "detail": {
+        "energy": 21.4584
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 4,
+      "cropPath": "region-4.png"
+    },
+    {
+      "id": "page-heading",
+      "kind": "text",
+      "note": "Greeting and localized date forming the dashboard page heading.",
+      "grid": null,
+      "parentId": "topbar",
+      "box": {
+        "x": 0.168,
+        "y": 0.018,
+        "w": 0.36,
+        "h": 0.075
+      },
+      "px": {
+        "x": 258,
+        "y": 18,
+        "w": 553,
+        "h": 77
+      },
+      "aspect": 7.1818,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.9145
+        },
+        {
+          "hex": "#090e23",
+          "coverage": 0.0436
+        },
+        {
+          "hex": "#5b626f",
+          "coverage": 0.0188
+        },
+        {
+          "hex": "#a1a7b0",
+          "coverage": 0.0123
+        },
+        {
+          "hex": "#ccd0d2",
+          "coverage": 0.0108
+        }
+      ],
+      "detail": {
+        "energy": 39.3579
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 5,
+      "cropPath": "region-5.png"
+    },
+    {
+      "id": "new-class",
+      "kind": "control",
+      "note": "High-contrast primary action for creating a new class.",
+      "grid": null,
+      "parentId": "topbar",
+      "box": {
+        "x": 0.875,
+        "y": 0.022,
+        "w": 0.104,
+        "h": 0.054
+      },
+      "px": {
+        "x": 1344,
+        "y": 23,
+        "w": 160,
+        "h": 55
+      },
+      "aspect": 2.9091,
+      "palette": [
+        {
+          "hex": "#083535",
+          "coverage": 0.8374
+        },
+        {
+          "hex": "#f5f6f6",
+          "coverage": 0.0985
+        },
+        {
+          "hex": "#6d8383",
+          "coverage": 0.0404
+        },
+        {
+          "hex": "#a9b9b9",
+          "coverage": 0.0138
+        },
+        {
+          "hex": "#082632",
+          "coverage": 0.0099
+        }
+      ],
+      "detail": {
+        "energy": 21.3259
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 6,
+      "cropPath": "region-6.png"
+    },
+    {
+      "id": "summary-strip",
+      "kind": "chrome",
+      "note": "Single horizontal summary strip with four key daily and business metrics.",
+      "grid": null,
+      "container": true,
+      "box": {
+        "x": 0.167,
+        "y": 0.105,
+        "w": 0.811,
+        "h": 0.091
+      },
+      "px": {
+        "x": 257,
+        "y": 108,
+        "w": 1246,
+        "h": 93
+      },
+      "aspect": 13.3978,
+      "palette": [
+        {
+          "hex": "#eaf8f3",
+          "coverage": 0.979
+        },
+        {
+          "hex": "#56616a",
+          "coverage": 0.0072
+        },
+        {
+          "hex": "#124f4b",
+          "coverage": 0.0058
+        },
+        {
+          "hex": "#08081c",
+          "coverage": 0.0043
+        },
+        {
+          "hex": "#8a9198",
+          "coverage": 0.0037
+        }
+      ],
+      "detail": {
+        "energy": 12.204
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 7,
+      "cropPath": "region-7.png"
+    },
+    {
+      "id": "metric-classes",
+      "kind": "text",
+      "note": "Today's class count and supporting label.",
+      "grid": null,
+      "parentId": "summary-strip",
+      "reviewGroup": "summary-metric",
+      "box": {
+        "x": 0.225,
+        "y": 0.123,
+        "w": 0.1,
+        "h": 0.059
+      },
+      "px": {
+        "x": 346,
+        "y": 126,
+        "w": 154,
+        "h": 60
+      },
+      "aspect": 2.5667,
+      "palette": [
+        {
+          "hex": "#eaf8f3",
+          "coverage": 0.9362
+        },
+        {
+          "hex": "#838892",
+          "coverage": 0.0203
+        },
+        {
+          "hex": "#505c67",
+          "coverage": 0.0174
+        },
+        {
+          "hex": "#bdc0c7",
+          "coverage": 0.0174
+        },
+        {
+          "hex": "#08081f",
+          "coverage": 0.0087
+        }
+      ],
+      "detail": {
+        "energy": 11.7614
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 8,
+      "cropPath": "region-8.png"
+    },
+    {
+      "id": "metric-students",
+      "kind": "text",
+      "note": "Active student count and supporting label.",
+      "grid": null,
+      "parentId": "summary-strip",
+      "reviewGroup": "summary-metric",
+      "box": {
+        "x": 0.4,
+        "y": 0.123,
+        "w": 0.12,
+        "h": 0.059
+      },
+      "px": {
+        "x": 614,
+        "y": 126,
+        "w": 184,
+        "h": 60
+      },
+      "aspect": 3.0667,
+      "palette": [
+        {
+          "hex": "#ebf7f2",
+          "coverage": 0.9392
+        },
+        {
+          "hex": "#565e69",
+          "coverage": 0.0238
+        },
+        {
+          "hex": "#929ba2",
+          "coverage": 0.0156
+        },
+        {
+          "hex": "#0a0c1c",
+          "coverage": 0.0148
+        },
+        {
+          "hex": "#0e4646",
+          "coverage": 0.0066
+        }
+      ],
+      "detail": {
+        "energy": 17.665
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 9,
+      "cropPath": "region-9.png"
+    },
+    {
+      "id": "metric-invoices",
+      "kind": "text",
+      "note": "Pending invoice count and its supporting label.",
+      "grid": null,
+      "parentId": "summary-strip",
+      "reviewGroup": "summary-metric",
+      "box": {
+        "x": 0.815,
+        "y": 0.123,
+        "w": 0.12,
+        "h": 0.059
+      },
+      "px": {
+        "x": 1252,
+        "y": 126,
+        "w": 184,
+        "h": 60
+      },
+      "aspect": 3.0667,
+      "palette": [
+        {
+          "hex": "#eaf7f1",
+          "coverage": 0.9512
+        },
+        {
+          "hex": "#859597",
+          "coverage": 0.0203
+        },
+        {
+          "hex": "#46535f",
+          "coverage": 0.0179
+        },
+        {
+          "hex": "#0a0c20",
+          "coverage": 0.0065
+        },
+        {
+          "hex": "#c2c2c5",
+          "coverage": 0.0041
+        }
+      ],
+      "detail": {
+        "energy": 12.5345
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 10,
+      "cropPath": "region-10.png"
+    },
+    {
+      "id": "agenda-heading",
+      "kind": "text",
+      "note": "Agenda section heading above the three time-of-day columns.",
+      "grid": null,
+      "box": {
+        "x": 0.17,
+        "y": 0.224,
+        "w": 0.2,
+        "h": 0.035
+      },
+      "px": {
+        "x": 261,
+        "y": 229,
+        "w": 307,
+        "h": 36
+      },
+      "aspect": 8.5278,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.8506
+        },
+        {
+          "hex": "#090b1d",
+          "coverage": 0.0844
+        },
+        {
+          "hex": "#bdbfc8",
+          "coverage": 0.0308
+        },
+        {
+          "hex": "#79808e",
+          "coverage": 0.0187
+        },
+        {
+          "hex": "#394151",
+          "coverage": 0.0154
+        }
+      ],
+      "detail": {
+        "energy": 49.0237
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 11,
+      "cropPath": "region-11.png"
+    },
+    {
+      "id": "morning-column",
+      "kind": "chrome",
+      "note": "Morning schedule column with period heading and three individual class cards.",
+      "grid": null,
+      "container": true,
+      "box": {
+        "x": 0.167,
+        "y": 0.271,
+        "w": 0.258,
+        "h": 0.434
+      },
+      "px": {
+        "x": 257,
+        "y": 278,
+        "w": 396,
+        "h": 444
+      },
+      "aspect": 0.8919,
+      "palette": [
+        {
+          "hex": "#f6f7f7",
+          "coverage": 0.9673
+        },
+        {
+          "hex": "#0d1120",
+          "coverage": 0.0093
+        },
+        {
+          "hex": "#9098a3",
+          "coverage": 0.0088
+        },
+        {
+          "hex": "#5f6a79",
+          "coverage": 0.0074
+        },
+        {
+          "hex": "#53a82b",
+          "coverage": 0.0073
+        }
+      ],
+      "detail": {
+        "energy": 18.7003
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 12,
+      "cropPath": "region-12.png"
+    },
+    {
+      "id": "morning-heading",
+      "kind": "text",
+      "note": "Morning period label, hours, and number of classes.",
+      "grid": null,
+      "parentId": "morning-column",
+      "box": {
+        "x": 0.182,
+        "y": 0.286,
+        "w": 0.21,
+        "h": 0.025
+      },
+      "px": {
+        "x": 280,
+        "y": 293,
+        "w": 323,
+        "h": 26
+      },
+      "aspect": 12.4231,
+      "palette": [
+        {
+          "hex": "#f7f8f7",
+          "coverage": 0.9335
+        },
+        {
+          "hex": "#090d17",
+          "coverage": 0.0239
+        },
+        {
+          "hex": "#253542",
+          "coverage": 0.0146
+        },
+        {
+          "hex": "#656d78",
+          "coverage": 0.0146
+        },
+        {
+          "hex": "#99a2a7",
+          "coverage": 0.0135
+        }
+      ],
+      "detail": {
+        "energy": 32.458
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 13,
+      "cropPath": "region-13.png"
+    },
+    {
+      "id": "morning-class-1",
+      "kind": "text",
+      "note": "First morning lesson card text: time, class type, student group, court, and status.",
+      "grid": null,
+      "parentId": "morning-column",
+      "reviewGroup": "lesson-card-copy",
+      "box": {
+        "x": 0.173,
+        "y": 0.33,
+        "w": 0.244,
+        "h": 0.105
+      },
+      "px": {
+        "x": 266,
+        "y": 338,
+        "w": 375,
+        "h": 108
+      },
+      "aspect": 3.4722,
+      "palette": [
+        {
+          "hex": "#f7f8f7",
+          "coverage": 0.9414
+        },
+        {
+          "hex": "#0e1223",
+          "coverage": 0.0157
+        },
+        {
+          "hex": "#54a72f",
+          "coverage": 0.0157
+        },
+        {
+          "hex": "#bfc7cc",
+          "coverage": 0.0136
+        },
+        {
+          "hex": "#626f7c",
+          "coverage": 0.0136
+        }
+      ],
+      "detail": {
+        "energy": 26.4228
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 14,
+      "cropPath": "region-14.png"
+    },
+    {
+      "id": "morning-class-2",
+      "kind": "text",
+      "note": "Second morning lesson card text: time, class type, student group, court, and status.",
+      "grid": null,
+      "parentId": "morning-column",
+      "reviewGroup": "lesson-card-copy",
+      "box": {
+        "x": 0.173,
+        "y": 0.454,
+        "w": 0.244,
+        "h": 0.105
+      },
+      "px": {
+        "x": 266,
+        "y": 465,
+        "w": 375,
+        "h": 108
+      },
+      "aspect": 3.4722,
+      "palette": [
+        {
+          "hex": "#f7f8f7",
+          "coverage": 0.9509
+        },
+        {
+          "hex": "#50a728",
+          "coverage": 0.0156
+        },
+        {
+          "hex": "#0b0f1e",
+          "coverage": 0.0133
+        },
+        {
+          "hex": "#b4bdc3",
+          "coverage": 0.0124
+        },
+        {
+          "hex": "#838a95",
+          "coverage": 0.0078
+        }
+      ],
+      "detail": {
+        "energy": 21.2736
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 15,
+      "cropPath": "region-15.png"
+    },
+    {
+      "id": "morning-class-3",
+      "kind": "text",
+      "note": "Third morning lesson card text: time, class type, student group, court, and status.",
+      "grid": null,
+      "parentId": "morning-column",
+      "reviewGroup": "lesson-card-copy",
+      "box": {
+        "x": 0.173,
+        "y": 0.578,
+        "w": 0.244,
+        "h": 0.105
+      },
+      "px": {
+        "x": 266,
+        "y": 592,
+        "w": 375,
+        "h": 108
+      },
+      "aspect": 3.4722,
+      "palette": [
+        {
+          "hex": "#f6f7f8",
+          "coverage": 0.9474
+        },
+        {
+          "hex": "#0e5ca3",
+          "coverage": 0.0209
+        },
+        {
+          "hex": "#aeb3bb",
+          "coverage": 0.0156
+        },
+        {
+          "hex": "#0a0f1b",
+          "coverage": 0.0091
+        },
+        {
+          "hex": "#454b5b",
+          "coverage": 0.007
+        }
+      ],
+      "detail": {
+        "energy": 21.5106
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 16,
+      "cropPath": "region-16.png"
+    },
+    {
+      "id": "afternoon-column",
+      "kind": "chrome",
+      "note": "Afternoon schedule column with period heading and two individual class cards.",
+      "grid": null,
+      "container": true,
+      "box": {
+        "x": 0.438,
+        "y": 0.271,
+        "w": 0.267,
+        "h": 0.434
+      },
+      "px": {
+        "x": 673,
+        "y": 278,
+        "w": 410,
+        "h": 444
+      },
+      "aspect": 0.9234,
+      "palette": [
+        {
+          "hex": "#f7f8f7",
+          "coverage": 0.9781
+        },
+        {
+          "hex": "#596373",
+          "coverage": 0.0068
+        },
+        {
+          "hex": "#c5cad0",
+          "coverage": 0.0056
+        },
+        {
+          "hex": "#0a0e1c",
+          "coverage": 0.0053
+        },
+        {
+          "hex": "#949aa4",
+          "coverage": 0.0041
+        }
+      ],
+      "detail": {
+        "energy": 12.2877
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 17,
+      "cropPath": "region-17.png"
+    },
+    {
+      "id": "afternoon-heading",
+      "kind": "text",
+      "note": "Afternoon period label, hours, and number of classes.",
+      "grid": null,
+      "parentId": "afternoon-column",
+      "box": {
+        "x": 0.452,
+        "y": 0.286,
+        "w": 0.23,
+        "h": 0.025
+      },
+      "px": {
+        "x": 694,
+        "y": 293,
+        "w": 353,
+        "h": 26
+      },
+      "aspect": 13.5769,
+      "palette": [
+        {
+          "hex": "#f7f8f8",
+          "coverage": 0.9506
+        },
+        {
+          "hex": "#5d6a70",
+          "coverage": 0.0165
+        },
+        {
+          "hex": "#080a17",
+          "coverage": 0.0155
+        },
+        {
+          "hex": "#9396a3",
+          "coverage": 0.0087
+        },
+        {
+          "hex": "#333c4a",
+          "coverage": 0.0087
+        }
+      ],
+      "detail": {
+        "energy": 22.3653
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 18,
+      "cropPath": "region-18.png"
+    },
+    {
+      "id": "afternoon-class-1",
+      "kind": "text",
+      "note": "First afternoon lesson card text with its time, class, students, court, and state.",
+      "grid": null,
+      "parentId": "afternoon-column",
+      "reviewGroup": "lesson-card-copy",
+      "box": {
+        "x": 0.444,
+        "y": 0.33,
+        "w": 0.255,
+        "h": 0.105
+      },
+      "px": {
+        "x": 682,
+        "y": 338,
+        "w": 392,
+        "h": 108
+      },
+      "aspect": 3.6296,
+      "palette": [
+        {
+          "hex": "#f8f8f7",
+          "coverage": 0.9513
+        },
+        {
+          "hex": "#5e6776",
+          "coverage": 0.0139
+        },
+        {
+          "hex": "#949da5",
+          "coverage": 0.013
+        },
+        {
+          "hex": "#090b1d",
+          "coverage": 0.0119
+        },
+        {
+          "hex": "#c6c9d0",
+          "coverage": 0.0099
+        }
+      ],
+      "detail": {
+        "energy": 22.1274
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 19,
+      "cropPath": "region-19.png"
+    },
+    {
+      "id": "afternoon-class-2",
+      "kind": "text",
+      "note": "Second afternoon lesson card text with its time, class, students, court, and state.",
+      "grid": null,
+      "parentId": "afternoon-column",
+      "reviewGroup": "lesson-card-copy",
+      "box": {
+        "x": 0.444,
+        "y": 0.454,
+        "w": 0.255,
+        "h": 0.105
+      },
+      "px": {
+        "x": 682,
+        "y": 465,
+        "w": 392,
+        "h": 108
+      },
+      "aspect": 3.6296,
+      "palette": [
+        {
+          "hex": "#f6f8f7",
+          "coverage": 0.9681
+        },
+        {
+          "hex": "#9da0b0",
+          "coverage": 0.0096
+        },
+        {
+          "hex": "#50b626",
+          "coverage": 0.0079
+        },
+        {
+          "hex": "#646f7d",
+          "coverage": 0.0079
+        },
+        {
+          "hex": "#0a0c1c",
+          "coverage": 0.0066
+        }
+      ],
+      "detail": {
+        "energy": 20.8354
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 20,
+      "cropPath": "region-20.png"
+    },
+    {
+      "id": "evening-column",
+      "kind": "chrome",
+      "note": "Evening schedule column with period heading and three individual class cards.",
+      "grid": null,
+      "container": true,
+      "box": {
+        "x": 0.717,
+        "y": 0.271,
+        "w": 0.262,
+        "h": 0.434
+      },
+      "px": {
+        "x": 1101,
+        "y": 278,
+        "w": 402,
+        "h": 444
+      },
+      "aspect": 0.9054,
+      "palette": [
+        {
+          "hex": "#f7f8f7",
+          "coverage": 0.9605
+        },
+        {
+          "hex": "#0e1222",
+          "coverage": 0.0111
+        },
+        {
+          "hex": "#c0c4cd",
+          "coverage": 0.0107
+        },
+        {
+          "hex": "#7f8894",
+          "coverage": 0.0096
+        },
+        {
+          "hex": "#ecf6d6",
+          "coverage": 0.008
+        }
+      ],
+      "detail": {
+        "energy": 19.602
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 21,
+      "cropPath": "region-21.png"
+    },
+    {
+      "id": "evening-heading",
+      "kind": "text",
+      "note": "Evening period label, hours, and number of classes.",
+      "grid": null,
+      "parentId": "evening-column",
+      "box": {
+        "x": 0.73,
+        "y": 0.286,
+        "w": 0.23,
+        "h": 0.025
+      },
+      "px": {
+        "x": 1121,
+        "y": 293,
+        "w": 353,
+        "h": 26
+      },
+      "aspect": 13.5769,
+      "palette": [
+        {
+          "hex": "#f7f8f7",
+          "coverage": 0.9446
+        },
+        {
+          "hex": "#a8b4b9",
+          "coverage": 0.0201
+        },
+        {
+          "hex": "#0e1021",
+          "coverage": 0.0134
+        },
+        {
+          "hex": "#49525e",
+          "coverage": 0.0124
+        },
+        {
+          "hex": "#828a95",
+          "coverage": 0.0096
+        }
+      ],
+      "detail": {
+        "energy": 25.8938
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 22,
+      "cropPath": "region-22.png"
+    },
+    {
+      "id": "evening-class-1",
+      "kind": "text",
+      "note": "First evening lesson card text: time, class type, student group, court, and status.",
+      "grid": null,
+      "parentId": "evening-column",
+      "reviewGroup": "lesson-card-copy",
+      "box": {
+        "x": 0.723,
+        "y": 0.33,
+        "w": 0.248,
+        "h": 0.105
+      },
+      "px": {
+        "x": 1111,
+        "y": 338,
+        "w": 381,
+        "h": 108
+      },
+      "aspect": 3.5278,
+      "palette": [
+        {
+          "hex": "#f6f8f7",
+          "coverage": 0.943
+        },
+        {
+          "hex": "#b9c1c6",
+          "coverage": 0.0181
+        },
+        {
+          "hex": "#5a6675",
+          "coverage": 0.0174
+        },
+        {
+          "hex": "#9197a4",
+          "coverage": 0.0136
+        },
+        {
+          "hex": "#080c21",
+          "coverage": 0.0079
+        }
+      ],
+      "detail": {
+        "energy": 26.2663
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 23,
+      "cropPath": "region-23.png"
+    },
+    {
+      "id": "evening-class-2",
+      "kind": "text",
+      "note": "Second evening lesson card text: time, class type, student group, court, and status.",
+      "grid": null,
+      "parentId": "evening-column",
+      "reviewGroup": "lesson-card-copy",
+      "box": {
+        "x": 0.723,
+        "y": 0.454,
+        "w": 0.248,
+        "h": 0.105
+      },
+      "px": {
+        "x": 1111,
+        "y": 465,
+        "w": 381,
+        "h": 108
+      },
+      "aspect": 3.5278,
+      "palette": [
+        {
+          "hex": "#f8f8f7",
+          "coverage": 0.952
+        },
+        {
+          "hex": "#f8f0d7",
+          "coverage": 0.0169
+        },
+        {
+          "hex": "#687280",
+          "coverage": 0.0146
+        },
+        {
+          "hex": "#e68e17",
+          "coverage": 0.009
+        },
+        {
+          "hex": "#0a0a17",
+          "coverage": 0.0074
+        }
+      ],
+      "detail": {
+        "energy": 18.619
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 24,
+      "cropPath": "region-24.png"
+    },
+    {
+      "id": "evening-class-3",
+      "kind": "text",
+      "note": "Third evening lesson card text: time, class type, student group, court, and status.",
+      "grid": null,
+      "parentId": "evening-column",
+      "reviewGroup": "lesson-card-copy",
+      "box": {
+        "x": 0.723,
+        "y": 0.578,
+        "w": 0.248,
+        "h": 0.105
+      },
+      "px": {
+        "x": 1111,
+        "y": 592,
+        "w": 381,
+        "h": 108
+      },
+      "aspect": 3.5278,
+      "palette": [
+        {
+          "hex": "#f7f8f7",
+          "coverage": 0.9468
+        },
+        {
+          "hex": "#646f7d",
+          "coverage": 0.0196
+        },
+        {
+          "hex": "#0a0b18",
+          "coverage": 0.0127
+        },
+        {
+          "hex": "#9a9da8",
+          "coverage": 0.0107
+        },
+        {
+          "hex": "#343b4b",
+          "coverage": 0.0102
+        }
+      ],
+      "detail": {
+        "energy": 26.9412
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 25,
+      "cropPath": "region-25.png"
+    },
+    {
+      "id": "billing-panel",
+      "kind": "chrome",
+      "note": "Wide lower-left panel for upcoming tuition payments, with student, plan, due date, value, and pending status.",
+      "grid": null,
+      "container": true,
+      "box": {
+        "x": 0.167,
+        "y": 0.724,
+        "w": 0.448,
+        "h": 0.247
+      },
+      "px": {
+        "x": 257,
+        "y": 741,
+        "w": 688,
+        "h": 253
+      },
+      "aspect": 2.7194,
+      "palette": [
+        {
+          "hex": "#f7f7f6",
+          "coverage": 0.9528
+        },
+        {
+          "hex": "#69727f",
+          "coverage": 0.0198
+        },
+        {
+          "hex": "#9ea4ae",
+          "coverage": 0.0107
+        },
+        {
+          "hex": "#c0c7cb",
+          "coverage": 0.0092
+        },
+        {
+          "hex": "#f8f1d0",
+          "coverage": 0.0075
+        }
+      ],
+      "detail": {
+        "energy": 18.0636
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 26,
+      "cropPath": "region-26.png"
+    },
+    {
+      "id": "billing-heading",
+      "kind": "text",
+      "note": "Pending billing heading with a link to the full list.",
+      "grid": null,
+      "parentId": "billing-panel",
+      "box": {
+        "x": 0.18,
+        "y": 0.737,
+        "w": 0.41,
+        "h": 0.043
+      },
+      "px": {
+        "x": 276,
+        "y": 755,
+        "w": 630,
+        "h": 44
+      },
+      "aspect": 14.3182,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.9676
+        },
+        {
+          "hex": "#0b101d",
+          "coverage": 0.0178
+        },
+        {
+          "hex": "#333c4c",
+          "coverage": 0.0058
+        },
+        {
+          "hex": "#5e6575",
+          "coverage": 0.0049
+        },
+        {
+          "hex": "#25635c",
+          "coverage": 0.0039
+        }
+      ],
+      "detail": {
+        "energy": 21.7025
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 27,
+      "cropPath": "region-27.png"
+    },
+    {
+      "id": "billing-rows",
+      "kind": "text",
+      "note": "Compact table rows listing student names, plan names, due dates, prices, and invoice states.",
+      "grid": null,
+      "parentId": "billing-panel",
+      "box": {
+        "x": 0.178,
+        "y": 0.78,
+        "w": 0.425,
+        "h": 0.183
+      },
+      "px": {
+        "x": 273,
+        "y": 799,
+        "w": 653,
+        "h": 187
+      },
+      "aspect": 3.492,
+      "palette": [
+        {
+          "hex": "#f7f7f6",
+          "coverage": 0.9512
+        },
+        {
+          "hex": "#696f7c",
+          "coverage": 0.0177
+        },
+        {
+          "hex": "#bfc5cb",
+          "coverage": 0.0116
+        },
+        {
+          "hex": "#919ba2",
+          "coverage": 0.0107
+        },
+        {
+          "hex": "#f8f6d6",
+          "coverage": 0.0088
+        }
+      ],
+      "detail": {
+        "energy": 19.908
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 28,
+      "cropPath": "region-28.png"
+    },
+    {
+      "id": "revenue-panel",
+      "kind": "chrome",
+      "note": "Lower-right monthly revenue summary with total, received and pending amounts, and a restrained chart.",
+      "grid": null,
+      "container": true,
+      "box": {
+        "x": 0.626,
+        "y": 0.724,
+        "w": 0.353,
+        "h": 0.247
+      },
+      "px": {
+        "x": 962,
+        "y": 741,
+        "w": 542,
+        "h": 253
+      },
+      "aspect": 2.1423,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.9104
+        },
+        {
+          "hex": "#0b6c58",
+          "coverage": 0.0419
+        },
+        {
+          "hex": "#c9d8c9",
+          "coverage": 0.0256
+        },
+        {
+          "hex": "#69717d",
+          "coverage": 0.0116
+        },
+        {
+          "hex": "#090c1f",
+          "coverage": 0.0106
+        }
+      ],
+      "detail": {
+        "energy": 19.7366
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 29,
+      "cropPath": "region-29.png"
+    },
+    {
+      "id": "revenue-heading-total",
+      "kind": "text",
+      "note": "Revenue panel heading, month label, and prominent monthly revenue total.",
+      "grid": null,
+      "parentId": "revenue-panel",
+      "box": {
+        "x": 0.64,
+        "y": 0.738,
+        "w": 0.2,
+        "h": 0.108
+      },
+      "px": {
+        "x": 983,
+        "y": 756,
+        "w": 307,
+        "h": 111
+      },
+      "aspect": 2.7658,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.9115
+        },
+        {
+          "hex": "#0b0e21",
+          "coverage": 0.0478
+        },
+        {
+          "hex": "#6f7682",
+          "coverage": 0.0172
+        },
+        {
+          "hex": "#414b5a",
+          "coverage": 0.0156
+        },
+        {
+          "hex": "#c7cad4",
+          "coverage": 0.008
+        }
+      ],
+      "detail": {
+        "energy": 33.4194
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 30,
+      "cropPath": "region-30.png"
+    },
+    {
+      "id": "revenue-legend",
+      "kind": "text",
+      "note": "Received and pending revenue amounts aligned with their chart legend.",
+      "grid": null,
+      "parentId": "revenue-panel",
+      "box": {
+        "x": 0.826,
+        "y": 0.788,
+        "w": 0.137,
+        "h": 0.068
+      },
+      "px": {
+        "x": 1269,
+        "y": 807,
+        "w": 210,
+        "h": 70
+      },
+      "aspect": 3,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.9077
+        },
+        {
+          "hex": "#626975",
+          "coverage": 0.0371
+        },
+        {
+          "hex": "#90979f",
+          "coverage": 0.0312
+        },
+        {
+          "hex": "#c0c6ca",
+          "coverage": 0.0192
+        },
+        {
+          "hex": "#aad49c",
+          "coverage": 0.0048
+        }
+      ],
+      "detail": {
+        "energy": 20.6996
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 31,
+      "cropPath": "region-31.png"
+    },
+    {
+      "id": "revenue-chart",
+      "kind": "control",
+      "note": "Weekly revenue visualization with received and pending portions.",
+      "grid": null,
+      "parentId": "revenue-panel",
+      "box": {
+        "x": 0.64,
+        "y": 0.874,
+        "w": 0.324,
+        "h": 0.061
+      },
+      "px": {
+        "x": 983,
+        "y": 895,
+        "w": 498,
+        "h": 62
+      },
+      "aspect": 8.0323,
+      "palette": [
+        {
+          "hex": "#f8f8f8",
+          "coverage": 0.6528
+        },
+        {
+          "hex": "#0c6c5b",
+          "coverage": 0.1832
+        },
+        {
+          "hex": "#cbdbca",
+          "coverage": 0.1233
+        },
+        {
+          "hex": "#6da89a",
+          "coverage": 0.0307
+        },
+        {
+          "hex": "#717684",
+          "coverage": 0.0099
+        }
+      ],
+      "detail": {
+        "energy": 17.6154
+      },
+      "medium": "semantic",
+      "plate": null,
+      "text": null,
+      "number": 32,
+      "cropPath": "region-32.png"
+    }
+  ],
+  "issues": [
+    {
+      "severity": "warning",
+      "code": "measurement-warning",
+      "regionId": null,
+      "message": "region sidebar: \"container\": true set in the regions file (the region-size refusal is overridden: one undivided element)"
+    },
+    {
+      "severity": "warning",
+      "code": "measurement-warning",
+      "regionId": null,
+      "message": "region topbar: \"container\": true set in the regions file (the region-size refusal is overridden: one undivided element)"
+    },
+    {
+      "severity": "warning",
+      "code": "measurement-warning",
+      "regionId": null,
+      "message": "region summary-strip: \"container\": true set in the regions file (the region-size refusal is overridden: one undivided element)"
+    },
+    {
+      "severity": "warning",
+      "code": "measurement-warning",
+      "regionId": null,
+      "message": "region morning-column: \"container\": true set in the regions file (the region-size refusal is overridden: one undivided element)"
+    },
+    {
+      "severity": "warning",
+      "code": "measurement-warning",
+      "regionId": null,
+      "message": "region afternoon-column: \"container\": true set in the regions file (the region-size refusal is overridden: one undivided element)"
+    },
+    {
+      "severity": "warning",
+      "code": "measurement-warning",
+      "regionId": null,
+      "message": "region evening-column: \"container\": true set in the regions file (the region-size refusal is overridden: one undivided element)"
+    },
+    {
+      "severity": "warning",
+      "code": "measurement-warning",
+      "regionId": null,
+      "message": "region billing-panel: \"container\": true set in the regions file (the region-size refusal is overridden: one undivided element)"
+    },
+    {
+      "severity": "warning",
+      "code": "measurement-warning",
+      "regionId": null,
+      "message": "region revenue-panel: \"container\": true set in the regions file (the region-size refusal is overridden: one undivided element)"
+    },
+    {
+      "severity": "warning",
+      "code": "uncovered-ink",
+      "regionId": null,
+      "message": "8 grid cells have detail outside named regions. This is a coverage heuristic, not proof of missing components."
+    }
+  ],
+  "overlaps": [
+    {
+      "a": "sidebar",
+      "b": "brand",
+      "pixels": 7008.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "sidebar",
+      "b": "sidebar-nav",
+      "pixels": 85618.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "topbar",
+      "b": "page-heading",
+      "pixels": 42581.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "topbar",
+      "b": "new-class",
+      "pixels": 8800.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "summary-strip",
+      "b": "metric-classes",
+      "pixels": 9240.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "summary-strip",
+      "b": "metric-students",
+      "pixels": 11040.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "summary-strip",
+      "b": "metric-invoices",
+      "pixels": 11040.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "morning-column",
+      "b": "morning-heading",
+      "pixels": 8398.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "morning-column",
+      "b": "morning-class-1",
+      "pixels": 40500.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "morning-column",
+      "b": "morning-class-2",
+      "pixels": 40500.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "morning-column",
+      "b": "morning-class-3",
+      "pixels": 40500.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "afternoon-column",
+      "b": "afternoon-heading",
+      "pixels": 9178.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "afternoon-column",
+      "b": "afternoon-class-1",
+      "pixels": 42336.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "afternoon-column",
+      "b": "afternoon-class-2",
+      "pixels": 42336.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "evening-column",
+      "b": "evening-heading",
+      "pixels": 9178.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "evening-column",
+      "b": "evening-class-1",
+      "pixels": 41148.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "evening-column",
+      "b": "evening-class-2",
+      "pixels": 41148.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "evening-column",
+      "b": "evening-class-3",
+      "pixels": 41148.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "billing-panel",
+      "b": "billing-heading",
+      "pixels": 27720.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "billing-panel",
+      "b": "billing-rows",
+      "pixels": 122111.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "revenue-panel",
+      "b": "revenue-heading-total",
+      "pixels": 34077.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "revenue-panel",
+      "b": "revenue-legend",
+      "pixels": 14700.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "revenue-panel",
+      "b": "revenue-chart",
+      "pixels": 30876.0,
+      "relationship": "container extent"
+    },
+    {
+      "a": "revenue-heading-total",
+      "b": "revenue-legend",
+      "pixels": 1260.0,
+      "relationship": "overlapping elements"
+    }
+  ],
+  "reviewGroups": {
+    "summary-metric": [
+      "metric-classes",
+      "metric-students",
+      "metric-invoices"
+    ],
+    "lesson-card-copy": [
+      "morning-class-1",
+      "morning-class-2",
+      "morning-class-3",
+      "afternoon-class-1",
+      "afternoon-class-2",
+      "evening-class-1",
+      "evening-class-2",
+      "evening-class-3"
+    ]
+  },
+  "uncoveredInkCells": [
+    "B1",
+    "B2",
+    "B3",
+    "B4",
+    "B5",
+    "B6",
+    "B7",
+    "B8"
+  ],
+  "comparisonSheets": []
+}
