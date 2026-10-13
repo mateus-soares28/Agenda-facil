@@ -201,8 +201,10 @@ export function StudentForm({
   );
 }
 
-export function LessonForm({ today, onSave, onCancel }: {
+export function LessonForm({ today, initialStartTime, initialEndTime, onSave, onCancel }: {
   today: string;
+  initialStartTime?: string;
+  initialEndTime?: string;
   onSave: (lessons: Lesson[]) => void;
   onCancel: () => void;
 }) {
@@ -277,10 +279,10 @@ export function LessonForm({ today, onSave, onCancel }: {
           <small>Reservas recorrentes repetem no mesmo dia da semana até o fim do período.</small>
         </label>
         <label className="field">
-          Início *<input name="start_time" type="time" required />
+          Início *<input name="start_time" type="time" defaultValue={initialStartTime} required />
         </label>
         <label className="field">
-          Término *<input name="end_time" type="time" required />
+          Término *<input name="end_time" type="time" defaultValue={initialEndTime} required />
         </label>
         <label className="field field-wide">
           Quadra *

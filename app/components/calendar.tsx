@@ -94,6 +94,7 @@ export function Calendar({
   plans,
   onModeChange,
   onDateChange,
+  onCreateLesson,
   onCheckIn,
   onAddStudent,
   onRemoveStudent,
@@ -107,6 +108,7 @@ export function Calendar({
   plans: Plan[];
   onModeChange: (mode: CalendarMode) => void;
   onDateChange: (date: string) => void;
+  onCreateLesson: (slot: { date: string; startTime: string; endTime: string }) => void;
   onCheckIn: (lesson: Lesson) => void;
   onAddStudent: (lesson: Lesson, studentId: string, planId: string, monthlyLimit: number) => void;
   onRemoveStudent: (lesson: Lesson, studentId: string) => void;
@@ -418,6 +420,26 @@ export function Calendar({
                           style={{ top: (hour - startHour) * HOUR_HEIGHT }}
                         />
                       ))}
+                      {hours.map((hour) => {
+                        const startTime = `${String(hour).padStart(2, "0")}:00`;
+                        const endTime = `${String(hour + 1).padStart(2, "0")}:00`;
+                        const occupied = dayLessons.some(
+                          (lesson) => lesson.start_time < endTime && lesson.end_time > startTime,
+                        );
+                        return occupied ? null : (
+                          <button
+                            key={hour}
+                            type="button"
+                            className="calendar-empty-slot"
+                            style={{ top: (hour - startHour) * HOUR_HEIGHT, height: HOUR_HEIGHT }}
+                            onClick={() => onCreateLesson({ date: day, startTime, endTime })}
+                            aria-label={`Criar aula em ${dayFormat.format(fromKey(day))}, das ${startTime} às ${endTime}`}
+                            title={`Nova aula às ${startTime}`}
+                          >
+                            <span aria-hidden="true">+</span>
+                          </button>
+                        );
+                      })}
                       {placeLessons(dayLessons).map(
                         ({ lesson, start, end, track, tracks }) => {
                           const style: CSSProperties = {

@@ -322,6 +322,60 @@ p {
 .secondary-button:hover {
   background: #f2f2f2;
 }
+.sign-out-button {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid #d8d8d8;
+  border-radius: 7px;
+  background: #fff;
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+}
+.sign-out-button:hover { background: #f2f2f2; }
+.auth-page {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 24px;
+}
+.auth-card {
+  width: min(100%, 430px);
+  padding: clamp(24px, 5vw, 40px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 24px 70px #1111;
+}
+.auth-brand {
+  margin-bottom: 42px;
+  color: #111;
+  font-size: 24px;
+  font-weight: 750;
+  letter-spacing: -0.05em;
+}
+.auth-brand span { color: #777; font-weight: 400; }
+.auth-card h1 { margin: 0 0 8px; font-size: 29px; letter-spacing: -0.035em; }
+.auth-card > p:not(.eyebrow) { margin-bottom: 26px; color: var(--muted); font-size: 14px; }
+.auth-card form { display: grid; gap: 16px; }
+.auth-card .primary-button { width: 100%; min-height: 44px; margin-top: 4px; }
+.auth-switch {
+  width: 100%;
+  margin-top: 20px;
+  padding: 8px;
+  border: 0;
+  background: transparent;
+  color: #444;
+  font-size: 13px;
+  text-decoration: underline;
+}
+.auth-message { margin: 0; color: #333; font-size: 13px; }
+.migration-panel { display: grid; gap: 16px; }
+.migration-panel h2 { margin: 0 0 4px; font-size: 18px; }
+.migration-panel p { margin: 0; color: var(--muted); font-size: 14px; }
+.migration-panel .field { max-width: 460px; }
+.migration-summary { display: grid; gap: 12px; }
+.migration-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .page-content {
   width: min(100%, 1480px);
   flex: 1;
@@ -1526,6 +1580,47 @@ p {
   left: 0;
   height: 1px;
   background: #ebebeb;
+  pointer-events: none;
+}
+.calendar-empty-slot {
+  position: absolute;
+  right: 0;
+  left: 0;
+  display: grid;
+  width: 100%;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #a1a1a1;
+  cursor: pointer;
+}
+.calendar-empty-slot span {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 1px solid #e8e8e8;
+  border-radius: 50%;
+  background: #fff;
+  font-size: 17px;
+  line-height: 1;
+}
+.calendar-empty-slot:hover,
+.calendar-empty-slot:focus-visible {
+  background: #f4f4f4;
+  color: #111;
+}
+.calendar-empty-slot:hover span,
+.calendar-empty-slot:focus-visible span {
+  border-color: #aaa;
+}
+.calendar-empty-slot:focus-visible {
+  z-index: 2;
+  outline: 2px solid #111;
+  outline-offset: -2px;
+}
+.lesson-form-anchor {
+  scroll-margin-top: 16px;
 }
 .calendar-event {
   position: absolute;

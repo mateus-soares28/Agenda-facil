@@ -1,7 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { browserStore, emptyData } from "../lib/data/browser-store";
+import { createSupabaseRepository } from "../lib/data/supabase-store";
+import { createClient } from "../lib/supabase/client";
+import { useRouter } from "next/navigation";
 import type {
   AppData,
   Invoice,
@@ -75,6 +78,17 @@ function initials(name: string) {
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase())
     .join("");
+}
+
+function isAppData(value: unknown): value is AppData {
+  if (!value || typeof value !== "object") return false;
+  const data = value as Partial<AppData>;
+  return Array.isArray(data.students) && Array.isArray(data.lessons) &&
+    Array.isArray(data.plans) && Array.isArray(data.invoices) &&
+    data.students.every((student) => typeof student.id === "string" && typeof student.full_name === "string") &&
+    data.lessons.every((lesson) => typeof lesson.id === "string" && Array.isArray(lesson.student_ids)) &&
+    data.plans.every((plan) => typeof plan.id === "string" && typeof plan.name === "string") &&
+    data.invoices.every((invoice) => typeof invoice.id === "string" && typeof invoice.student_id === "string");
 }
 
 function EmptyState({
@@ -151,11 +165,19 @@ function LessonList({
 }
 
 export default function Home() {
+  const router = useRouter();
+  const repository = useMemo(() => createSupabaseRepository(), []);
   const [data, setData] = useState<AppData>(emptyData);
+  const [migrationSource, setMigrationSource] = useState<AppData | null>(null);
+  const [migrationBusy, setMigrationBusy] = useState(false);
+  const [migrationMessage, setMigrationMessage] = useState("");
   const [loaded, setLoaded] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [storageError, setStorageError] = useState("");
   const [view, setView] = useState<View>("overview");
   const [showLessonForm, setShowLessonForm] = useState(false);
+  const [lessonSlot, setLessonSlot] = useState<{ date: string; startTime: string; endTime: string } | null>(null);
+  const lessonFormRef = useRef<HTMLDivElement>(null);
   const [showPlanForm, setShowPlanForm] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [editingPlan, setEditingPlan] = useState<Plan | null>(null);
@@ -168,16 +190,31 @@ export default function Home() {
   const [todayLabel, setTodayLabel] = useState("");
 
   useEffect(() => {
+    if (!showLessonForm || !lessonSlot) return;
+    const frame = window.requestAnimationFrame(() => {
+      lessonFormRef.current?.scrollIntoView({
+        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+        block: "start",
+      });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [showLessonForm, lessonSlot]);
+
+  useEffect(() => {
     const timer = window.setTimeout(() => {
-      browserStore
-        .load()
-        .then(setData)
-        .catch(() =>
-          setStorageError(
-            "Não foi possível ler os dados deste navegador. Seus dados não foram alterados.",
-          ),
-        )
-        .finally(() => setLoaded(true));
+      Promise.allSettled([repository.load(), browserStore.load()]).then(([remote, local]) => {
+        if (remote.status === "fulfilled") setData(remote.value);
+        else {
+          setLoadFailed(true);
+          setStorageError(remote.reason instanceof Error ? remote.reason.message : "Não foi possível carregar os dados do Supabase.");
+        }
+        if (local.status === "fulfilled" &&
+          (local.value.students.length || local.value.lessons.length || local.value.invoices.length ||
+            local.value.plans.some((plan) => !emptyData.plans.some((item) =>
+              item.id === plan.id && JSON.stringify(item) === JSON.stringify(plan),
+            )))) setMigrationSource(local.value);
+        setLoaded(true);
+      });
       try {
         setCollapsed(
           window.localStorage.getItem("agenda-facil:sidebar-collapsed") ===
@@ -188,6 +225,7 @@ export default function Home() {
       }
       setToday(localDate());
       setCalendarDate(localDate());
+      if (window.matchMedia("(max-width: 760px)").matches) setCalendarMode("day");
       setTodayLabel(
         new Intl.DateTimeFormat("pt-BR", {
           dateStyle: "full",
@@ -196,7 +234,64 @@ export default function Home() {
       );
     }, 0);
     return () => window.clearTimeout(timer);
-  }, []);
+  }, [repository]);
+
+  useEffect(() => {
+    function refreshWhenVisible() {
+      if (document.visibilityState === "visible") {
+        void repository.load().then((result) => { setData(result); setLoadFailed(false); }).catch(() =>
+          setStorageError("Não foi possível sincronizar. Recarregue a página."),
+        );
+      }
+    }
+    window.addEventListener("focus", refreshWhenVisible);
+    document.addEventListener("visibilitychange", refreshWhenVisible);
+    return () => {
+      window.removeEventListener("focus", refreshWhenVisible);
+      document.removeEventListener("visibilitychange", refreshWhenVisible);
+    };
+  }, [repository]);
+
+  async function refreshData() {
+    setData(await repository.load());
+    setLoadFailed(false);
+  }
+
+  function reportMutationError(error: unknown, fallback: string) {
+    setStorageError(error instanceof Error ? error.message : fallback);
+    void refreshData().catch(() => setLoadFailed(true));
+  }
+
+  function syncAfterMutation() {
+    void refreshData().catch(() =>
+      setStorageError("Alteração salva, mas não foi possível atualizar a tela. Recarregue a página."),
+    );
+  }
+
+  async function importLocalData(source: AppData) {
+    setMigrationBusy(true);
+    setMigrationMessage("");
+    try {
+      const result = await repository.importData(source);
+      setData(result);
+      setMigrationSource(null);
+      setMigrationMessage("Importação concluída. Backup local preservado neste navegador.");
+      setStorageError("");
+    } catch (error) {
+      setMigrationMessage(error instanceof Error ? error.message : "Não foi possível importar o backup.");
+    } finally {
+      setMigrationBusy(false);
+    }
+  }
+
+  async function signOut() {
+    const { error } = await createClient().auth.signOut();
+    if (error) setStorageError("Não foi possível sair. Tente novamente.");
+    else {
+      router.replace("/login");
+      router.refresh();
+    }
+  }
 
   function createOpenInvoice(student: Student): Invoice | undefined {
     const plan = data.plans.find((item) => item.id === student.plan_id);
@@ -221,18 +316,17 @@ export default function Home() {
   async function persistStudent(student: Student) {
     try {
       const invoice = createOpenInvoice(student);
-      await browserStore.createStudent(student, invoice);
+      await repository.createStudent(student, invoice);
       setData((current) => ({
         ...current,
         students: [...current.students, student],
         invoices: invoice ? [...current.invoices, invoice] : current.invoices,
       }));
       setStorageError("");
+      syncAfterMutation();
       return true;
-    } catch {
-      setStorageError(
-        "Não foi possível salvar neste navegador. Verifique o espaço disponível e tente novamente.",
-      );
+    } catch (error) {
+      reportMutationError(error, "Não foi possível salvar no Supabase. Tente novamente.");
       return false;
     }
   }
@@ -242,7 +336,7 @@ export default function Home() {
         student.plan_id !== editingStudent?.plan_id ||
         student.monthly_class_limit !== editingStudent?.monthly_class_limit;
       const invoice = planChanged ? createOpenInvoice(student) : undefined;
-      await browserStore.updateStudent(student, invoice);
+      await repository.updateStudent(student, invoice);
       setData((current) => ({
         ...current,
         students: current.students.map((item) =>
@@ -251,9 +345,10 @@ export default function Home() {
         invoices: invoice ? [...current.invoices, invoice] : current.invoices,
       }));
       setStorageError("");
+      syncAfterMutation();
       return true;
-    } catch {
-      setStorageError("Não foi possível atualizar o aluno neste navegador.");
+    } catch (error) {
+      reportMutationError(error, "Não foi possível atualizar o aluno no Supabase.");
       return false;
     }
   }
@@ -265,7 +360,7 @@ export default function Home() {
     )
       return;
     try {
-      await browserStore.deleteStudent(student.id);
+      await repository.deleteStudent(student.id);
       const archivedAt = new Date().toISOString();
       setData((current) => ({
         ...current,
@@ -301,8 +396,9 @@ export default function Home() {
         }),
       }));
       setStorageError("");
-    } catch {
-      setStorageError("Não foi possível remover o aluno neste navegador.");
+      syncAfterMutation();
+    } catch (error) {
+      reportMutationError(error, "Não foi possível remover o aluno no Supabase.");
     }
   }
   async function persistLessons(lessons: Lesson[]) {
@@ -318,18 +414,19 @@ export default function Home() {
       return false;
     }
     try {
-      await browserStore.createLessons(lessons);
+      await repository.createLessons(lessons);
       setData((current) => ({ ...current, lessons: [...current.lessons, ...lessons] }));
       setStorageError("");
+      syncAfterMutation();
       return true;
-    } catch {
-      setStorageError("Não foi possível salvar neste navegador. Verifique o espaço disponível e tente novamente.");
+    } catch (error) {
+      reportMutationError(error, "Não foi possível salvar no Supabase. Tente novamente.");
       return false;
     }
   }
   async function updateLesson(lesson: Lesson) {
     try {
-      await browserStore.updateLesson(lesson);
+      await repository.updateLesson(lesson);
       setData((current) => ({
         ...current,
         lessons: current.lessons.map((item) =>
@@ -337,23 +434,25 @@ export default function Home() {
         ),
       }));
       setStorageError("");
+      syncAfterMutation();
       return true;
-    } catch {
-      setStorageError("Não foi possível atualizar a aula neste navegador.");
+    } catch (error) {
+      reportMutationError(error, "Não foi possível atualizar a aula no Supabase.");
       return false;
     }
   }
   async function deleteLesson(id: string) {
     try {
-      await browserStore.deleteLesson(id);
+      await repository.deleteLesson(id);
       setData((current) => ({
         ...current,
         lessons: current.lessons.filter((item) => item.id !== id),
       }));
       setStorageError("");
+      syncAfterMutation();
       return true;
-    } catch {
-      setStorageError("Não foi possível remover a aula neste navegador.");
+    } catch (error) {
+      reportMutationError(error, "Não foi possível remover a aula no Supabase.");
       return false;
     }
   }
@@ -397,10 +496,10 @@ export default function Home() {
       const updatedStudent: Student = { ...student, plan_id: plan.id, monthly_class_limit: plan.kind === "monthly" ? monthlyLimit : 1 };
       const changed = student.plan_id !== updatedStudent.plan_id || student.monthly_class_limit !== updatedStudent.monthly_class_limit;
       const invoice = changed ? createOpenInvoice(updatedStudent) : undefined;
-      if (changed) await browserStore.updateStudent(updatedStudent, invoice);
+      if (changed) await repository.updateStudent(updatedStudent, invoice);
       const updatedLessons = targetLessons.map((item) => ({ ...item, student_ids: [...item.student_ids, studentId] }));
-      if (updatedLessons.length === 1) await browserStore.updateLesson(updatedLessons[0]);
-      else if (updatedLessons.length) await browserStore.updateLessons(updatedLessons);
+      if (updatedLessons.length === 1) await repository.updateLesson(updatedLessons[0]);
+      else if (updatedLessons.length) await repository.updateLessons(updatedLessons);
       setData((current) => ({
         ...current,
         students: changed ? current.students.map((item) => item.id === studentId ? updatedStudent : item) : current.students,
@@ -408,8 +507,9 @@ export default function Home() {
         lessons: current.lessons.map((item) => updatedLessons.find((updated) => updated.id === item.id) ?? item),
       }));
       setStorageError("");
-    } catch {
-      setStorageError("N\u00e3o foi poss\u00edvel adicionar o aluno ao hor\u00e1rio recorrente.");
+      syncAfterMutation();
+    } catch (error) {
+      reportMutationError(error, "Não foi possível adicionar o aluno ao horário recorrente.");
     }
   }
   async function removeStudentFromLesson(lesson: Lesson, studentId: string) {
@@ -477,7 +577,7 @@ export default function Home() {
       created_at: new Date().toISOString(),
     };
     try {
-      await browserStore.rescheduleStudent(lesson, destination, studentId);
+      await repository.rescheduleStudent(lesson, destination, studentId);
       const remaining = lesson.student_ids.filter((id) => id !== studentId);
       setData((current) => ({
         ...current,
@@ -506,14 +606,15 @@ export default function Home() {
         ],
       }));
       setStorageError("");
-    } catch {
-      setStorageError("Não foi possível remanejar o aluno neste navegador.");
+      syncAfterMutation();
+    } catch (error) {
+      reportMutationError(error, "Não foi possível remanejar o aluno no Supabase.");
     }
   }
   async function persistPlan(plan: Plan) {
     try {
-      if (editingPlan) await browserStore.updatePlan(plan);
-      else await browserStore.createPlan(plan);
+      if (editingPlan) await repository.updatePlan(plan);
+      else await repository.createPlan(plan);
       setData((current) => ({
         ...current,
         plans: editingPlan
@@ -523,13 +624,15 @@ export default function Home() {
       setShowPlanForm(false);
       setEditingPlan(null);
       setStorageError("");
-    } catch {
-      setStorageError("Não foi possível salvar o plano neste navegador.");
+      syncAfterMutation();
+    } catch (error) {
+      reportMutationError(error, "Não foi possível salvar o plano no Supabase.");
     }
   }
   function go(next: View) {
     setView(next);
     setShowLessonForm(false);
+    setLessonSlot(null);
     setShowPlanForm(false);
     setEditingStudent(null);
     setEditingPlan(null);
@@ -549,16 +652,32 @@ export default function Home() {
       /* Layout still works. */
     }
   }
-  function exportData() {
-    const blob = new Blob([JSON.stringify(data, null, 2)], {
+  function downloadBackup(source: AppData, name: string) {
+    const blob = new Blob([JSON.stringify(source, null, 2)], {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `agenda-facil-${today}.json`;
+    link.download = name;
     link.click();
     window.setTimeout(() => URL.revokeObjectURL(url), 0);
+  }
+
+  function exportData() {
+    downloadBackup(data, `agenda-facil-${today}.json`);
+  }
+
+  async function chooseBackup(file?: File) {
+    if (!file) return;
+    try {
+      const parsed: unknown = JSON.parse(await file.text());
+      if (!isAppData(parsed)) throw new Error("Arquivo não contém um backup válido do Agenda Fácil.");
+      setMigrationSource(parsed);
+      setMigrationMessage("Backup pronto para importar. Confira os totais antes de continuar.");
+    } catch (error) {
+      setMigrationMessage(error instanceof Error ? error.message : "Não foi possível ler o arquivo.");
+    }
   }
 
   const activeStudents = useMemo(
@@ -695,7 +814,7 @@ export default function Home() {
             <span className="profile-avatar">AF</span>
             <span className="profile-copy">
               <strong>Área do professor</strong>
-              <small>Dados neste navegador</small>
+              <small>Dados sincronizados</small>
             </span>
           </div>
         </div>
@@ -724,8 +843,9 @@ export default function Home() {
           </div>
           <div className="topbar-actions">
             <span className="storage-pill">
-              <span /> Armazenamento local
+              <span /> Supabase
             </span>
+            <button className="sign-out-button" type="button" onClick={signOut}>Sair</button>
             <button
               className="top-action"
               type="button"
@@ -745,6 +865,15 @@ export default function Home() {
           {!loaded ? (
             <div className="loading-state" role="status">
               Carregando dados...
+            </div>
+          ) : loadFailed ? (
+            <div className="loading-state" role="alert">
+              <p>Não foi possível carregar sua agenda.</p>
+              <button className="primary-button" type="button" onClick={() => {
+                void refreshData().then(() => setStorageError("")).catch((error) =>
+                  setStorageError(error instanceof Error ? error.message : "Tente novamente."),
+                );
+              }}>Tentar novamente</button>
             </div>
           ) : (
             <>
@@ -913,7 +1042,7 @@ export default function Home() {
                     <div>
                       <p className="eyebrow">Cadastro</p>
                       <h1>Alunos</h1>
-                      <p>Todos os alunos cadastrados neste navegador.</p>
+                      <p>Todos os alunos da sua conta.</p>
                     </div>
                     <button
                       className="primary-button"
@@ -1084,12 +1213,15 @@ export default function Home() {
                     <div>
                       <p className="eyebrow">Horários</p>
                       <h1>Agenda</h1>
-                      <p>Visualize seus horários por dia, semana ou mês.</p>
+                      <p>Toque em um horário livre para criar uma aula. Visualize por dia, semana ou mês.</p>
                     </div>
                     <button
                       className="primary-button"
                       type="button"
-                      onClick={() => setShowLessonForm(!showLessonForm)}
+                      onClick={() => {
+                        setLessonSlot(null);
+                        setShowLessonForm(!showLessonForm);
+                      }}
                     >
                       <Icon
                         name={showLessonForm ? "close" : "plus"}
@@ -1099,16 +1231,25 @@ export default function Home() {
                     </button>
                   </section>
                   {showLessonForm && (
-                    <LessonForm
-                      today={calendarDate || today}
-                      onCancel={() => setShowLessonForm(false)}
-                      onSave={async (lessons) => {
-                        if (await persistLessons(lessons)) {
-                          setCalendarDate(lessons[0].class_date);
+                    <div ref={lessonFormRef} className="lesson-form-anchor">
+                      <LessonForm
+                        key={lessonSlot ? `${lessonSlot.date}-${lessonSlot.startTime}` : "manual"}
+                        today={lessonSlot?.date || calendarDate || today}
+                        initialStartTime={lessonSlot?.startTime}
+                        initialEndTime={lessonSlot?.endTime}
+                        onCancel={() => {
                           setShowLessonForm(false);
-                        }
-                      }}
-                    />
+                          setLessonSlot(null);
+                        }}
+                        onSave={async (lessons) => {
+                          if (await persistLessons(lessons)) {
+                            setCalendarDate(lessons[0].class_date);
+                            setShowLessonForm(false);
+                            setLessonSlot(null);
+                          }
+                        }}
+                      />
+                    </div>
                   )}
                   <Calendar
                     mode={calendarMode}
@@ -1123,6 +1264,10 @@ export default function Home() {
                     onReschedule={rescheduleStudent}
                     onModeChange={setCalendarMode}
                     onDateChange={setCalendarDate}
+                    onCreateLesson={(slot) => {
+                      setLessonSlot(slot);
+                      setShowLessonForm(true);
+                    }}
                   />
                 </>
               )}
@@ -1236,15 +1381,34 @@ export default function Home() {
                     <div>
                       <p className="eyebrow">Área do professor</p>
                       <h1>Configurações</h1>
-                      <p>Controle seus dados salvos neste navegador.</p>
+                      <p>Faça backup e importe dados antigos quando precisar.</p>
                     </div>
+                  </section>
+                  <section className="content-panel migration-panel">
+                    <div>
+                      <h2>Importar dados antigos</h2>
+                      <p>Escolha um backup JSON ou use os dados encontrados neste navegador. A importação não apaga o backup local.</p>
+                    </div>
+                    <label className="field">
+                      Arquivo de backup
+                      <input type="file" accept=".json,application/json" onChange={(event) => void chooseBackup(event.target.files?.[0])} />
+                    </label>
+                    {migrationSource && (
+                      <div className="migration-summary">
+                        <p>{migrationSource.students.length} alunos · {migrationSource.lessons.length} aulas · {migrationSource.invoices.length} cobranças</p>
+                        <div className="migration-actions">
+                          <button className="secondary-button" type="button" onClick={() => downloadBackup(migrationSource, `agenda-facil-local-${today}.json`)}>Baixar backup antes</button>
+                          <button className="primary-button" type="button" disabled={migrationBusy} onClick={() => void importLocalData(migrationSource)}>{migrationBusy ? "Importando…" : "Importar para Supabase"}</button>
+                        </div>
+                      </div>
+                    )}
+                    {migrationMessage && <p className="auth-message" role="status">{migrationMessage}</p>}
                   </section>
                   <section className="content-panel settings-panel">
                     <div>
                       <h2>Exportar dados</h2>
                       <p>
-                        Baixe alunos e aulas em JSON para backup ou migração
-                        futura. O arquivo contém dados pessoais.
+                        Baixe os dados sincronizados em JSON. O arquivo contém dados pessoais.
                       </p>
                     </div>
                     <button
@@ -1264,7 +1428,7 @@ export default function Home() {
                       <p className="eyebrow">Contas a receber</p>
                       <h1>Financeiro</h1>
                       <p>
-                        Planos registrados e valores pendentes neste navegador.
+                        Planos registrados e valores pendentes na sua conta.
                       </p>
                     </div>
                   </section>
@@ -1324,14 +1488,14 @@ export default function Home() {
                     <div>
                       <p className="eyebrow">Área do professor</p>
                       <h1>{viewTitles[view]}</h1>
-                      <p>A conexão com o Supabase ainda não foi configurada.</p>
+                      <p>Esta área está em desenvolvimento.</p>
                     </div>
                   </section>
                   <section className="content-panel">
                     <EmptyState
                       icon={view === "leads" ? "target" : "wallet"}
-                      title="Conexão pendente"
-                      description="Os registros aparecerão aqui após a integração com o Supabase."
+                      title="Em desenvolvimento"
+                      description="Esta funcionalidade será adicionada em uma próxima etapa."
                     />
                   </section>
                 </>
@@ -1342,7 +1506,7 @@ export default function Home() {
         <footer className="page-footer">
           <span>Agenda Fácil</span>
           <span>
-            Dados salvos somente neste navegador até a conexão com o Supabase.
+            Dados sincronizados com Supabase.
           </span>
         </footer>
       </div>
