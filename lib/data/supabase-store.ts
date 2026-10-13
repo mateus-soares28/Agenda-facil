@@ -1,5 +1,4 @@
-import type { AppData, DataRepository, Invoice, Lesson, Plan, Student } from "./types";
-import { defaultPlans } from "./default-plans";
+import type { DataRepository, Invoice, Lesson, Plan, Student } from "./types";
 import { createClient } from "../supabase/client";
 
 type Row = Record<string, unknown>;
@@ -62,9 +61,7 @@ function invoiceRow(tenantId: string, invoice: Invoice, student: Student) {
   };
 }
 
-export function createSupabaseRepository(): DataRepository & {
-  importData(data: AppData): Promise<AppData>;
-} {
+export function createSupabaseRepository(): DataRepository {
   const client = createClient();
   let tenantPromise: Promise<string> | undefined;
 
@@ -231,7 +228,7 @@ export function createSupabaseRepository(): DataRepository & {
     }
   }
 
-  const repository: DataRepository & { importData(data: AppData): Promise<AppData> } = {
+  const repository: DataRepository = {
     async load() {
       const tenantId = await tenant();
       const [studentRows, planRows, lessonRows, memberRows, invoiceRows] = await Promise.all([
@@ -391,73 +388,6 @@ export function createSupabaseRepository(): DataRepository & {
       const { error } = await client.from("lesson_offerings")
         .update(planRow(tenantId, plan)).eq("tenant_id", tenantId).eq("id", plan.id);
       if (error) throw error;
-    },
-    async importData(source) {
-      const tenantId = await tenant();
-      if (!Array.isArray(source.students) || !Array.isArray(source.plans) ||
-          !Array.isArray(source.lessons) || !Array.isArray(source.invoices)) {
-        throw new Error("Backup inválido.");
-      }
-      const current = await repository.load();
-      const planIds = new Set(current.plans.map((plan) => plan.id));
-      for (const plan of source.plans) {
-        if (!planIds.has(plan.id)) await repository.createPlan(plan);
-        else {
-          const original = defaultPlans.find((item) => item.id === plan.id);
-          const remote = current.plans.find((item) => item.id === plan.id);
-          if (original && remote && JSON.stringify(remote) === JSON.stringify(original) &&
-              JSON.stringify(plan) !== JSON.stringify(original)) await repository.updatePlan(plan);
-        }
-      }
-      const studentIds = new Set(current.students.map((student) => student.id));
-      for (const student of source.students) {
-        if (!studentIds.has(student.id)) {
-          const { error } = await client.from("students").insert(studentRow(tenantId, student));
-          if (error) throw error;
-        }
-      }
-      for (const invoice of source.invoices) {
-        const student = source.students.find((item) => item.id === invoice.student_id);
-        if (student && !current.invoices.some((item) =>
-          item.student_id === invoice.student_id && item.reference_month === invoice.reference_month,
-        )) {
-          try {
-            await saveInvoice(tenantId, invoice, student);
-          } catch (error) {
-            if (!(error instanceof Error) || error.message !== "Cobrança deste mês já foi paga.") throw error;
-          }
-        }
-      }
-      const attendedByMonth = new Map<string, number>();
-      for (const lesson of source.lessons) {
-        for (const studentId of lesson.checked_in_student_ids ?? []) {
-          const key = `${studentId}:${lesson.class_date.slice(0, 7)}-01`;
-          attendedByMonth.set(key, (attendedByMonth.get(key) ?? 0) + 1);
-        }
-      }
-      for (const [key, count] of attendedByMonth) {
-        const [studentId, month] = key.split(":");
-        await ensureQuota(tenantId, studentId, month);
-        const student = source.students.find((item) => item.id === studentId);
-        const plan = source.plans.find((item) => item.id === student?.plan_id);
-        if (plan?.kind !== "monthly") continue;
-        const { data: quota, error } = await client.from("monthly_quotas")
-          .select("id,total_classes")
-          .eq("tenant_id", tenantId).eq("student_id", studentId)
-          .eq("period_month", month).single();
-        if (error) throw error;
-        if (count > quota.total_classes) {
-          const { error: updateError } = await client.from("monthly_quotas")
-            .update({ total_classes: count }).eq("tenant_id", tenantId).eq("id", quota.id);
-          if (updateError) throw updateError;
-        }
-      }
-      const lessonIds = new Set(current.lessons.map((lesson) => lesson.id));
-      for (const lesson of source.lessons) {
-        if (lessonIds.has(lesson.id)) continue;
-        await writeLesson(tenantId, lesson, true);
-      }
-      return repository.load();
     },
   };
   return repository;

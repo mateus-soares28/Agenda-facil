@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { browserStore, emptyData } from "../lib/data/browser-store";
+import { defaultPlans } from "../lib/data/default-plans";
 import { createSupabaseRepository } from "../lib/data/supabase-store";
 import { createClient } from "../lib/supabase/client";
 import { useRouter } from "next/navigation";
@@ -29,6 +29,12 @@ type View =
   | "billing"
   | "leads"
   | "settings";
+const emptyData: AppData = {
+  students: [],
+  lessons: [],
+  plans: defaultPlans,
+  invoices: [],
+};
 const nav: { view: View; label: string; icon: IconName }[] = [
   { view: "overview", label: "Visão geral", icon: "grid" },
   { view: "agenda", label: "Agenda", icon: "calendar" },
@@ -78,17 +84,6 @@ function initials(name: string) {
     .slice(0, 2)
     .map((part) => part[0]?.toUpperCase())
     .join("");
-}
-
-function isAppData(value: unknown): value is AppData {
-  if (!value || typeof value !== "object") return false;
-  const data = value as Partial<AppData>;
-  return Array.isArray(data.students) && Array.isArray(data.lessons) &&
-    Array.isArray(data.plans) && Array.isArray(data.invoices) &&
-    data.students.every((student) => typeof student.id === "string" && typeof student.full_name === "string") &&
-    data.lessons.every((lesson) => typeof lesson.id === "string" && Array.isArray(lesson.student_ids)) &&
-    data.plans.every((plan) => typeof plan.id === "string" && typeof plan.name === "string") &&
-    data.invoices.every((invoice) => typeof invoice.id === "string" && typeof invoice.student_id === "string");
 }
 
 function EmptyState({
@@ -168,9 +163,7 @@ export default function Home() {
   const router = useRouter();
   const repository = useMemo(() => createSupabaseRepository(), []);
   const [data, setData] = useState<AppData>(emptyData);
-  const [migrationSource, setMigrationSource] = useState<AppData | null>(null);
-  const [migrationBusy, setMigrationBusy] = useState(false);
-  const [migrationMessage, setMigrationMessage] = useState("");
+  const [teacherName, setTeacherName] = useState("Professor");
   const [loaded, setLoaded] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
   const [storageError, setStorageError] = useState("");
@@ -202,20 +195,28 @@ export default function Home() {
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
-      Promise.allSettled([repository.load(), browserStore.load()]).then(([remote, local]) => {
-        if (remote.status === "fulfilled") setData(remote.value);
-        else {
-          setLoadFailed(true);
-          setStorageError(remote.reason instanceof Error ? remote.reason.message : "Não foi possível carregar os dados do Supabase.");
-        }
-        if (local.status === "fulfilled" &&
-          (local.value.students.length || local.value.lessons.length || local.value.invoices.length ||
-            local.value.plans.some((plan) => !emptyData.plans.some((item) =>
-              item.id === plan.id && JSON.stringify(item) === JSON.stringify(plan),
-            )))) setMigrationSource(local.value);
-        setLoaded(true);
+      repository.load().then(setData).catch((error) => {
+        setLoadFailed(true);
+        setStorageError(error instanceof Error ? error.message : "Não foi possível carregar os dados.");
+      }).finally(() => setLoaded(true));
+      void (async () => {
+        const supabase = createClient();
+        const { data: auth } = await supabase.auth.getUser();
+        if (!auth.user) return;
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("full_name")
+          .eq("id", auth.user.id)
+          .single();
+        const name = profile?.full_name?.trim() ||
+          String(auth.user.user_metadata?.full_name ?? "").trim() ||
+          auth.user.email?.split("@")[0] || "Professor";
+        setTeacherName(name);
+      })().catch(() => {
+        // Keep the generic label if profile lookup fails.
       });
       try {
+        window.localStorage.removeItem("agenda-facil:data:v1");
         setCollapsed(
           window.localStorage.getItem("agenda-facil:sidebar-collapsed") ===
             "true",
@@ -268,22 +269,6 @@ export default function Home() {
     );
   }
 
-  async function importLocalData(source: AppData) {
-    setMigrationBusy(true);
-    setMigrationMessage("");
-    try {
-      const result = await repository.importData(source);
-      setData(result);
-      setMigrationSource(null);
-      setMigrationMessage("Importação concluída. Backup local preservado neste navegador.");
-      setStorageError("");
-    } catch (error) {
-      setMigrationMessage(error instanceof Error ? error.message : "Não foi possível importar o backup.");
-    } finally {
-      setMigrationBusy(false);
-    }
-  }
-
   async function signOut() {
     const { error } = await createClient().auth.signOut();
     if (error) setStorageError("Não foi possível sair. Tente novamente.");
@@ -326,7 +311,7 @@ export default function Home() {
       syncAfterMutation();
       return true;
     } catch (error) {
-      reportMutationError(error, "Não foi possível salvar no Supabase. Tente novamente.");
+      reportMutationError(error, "Não foi possível salvar. Tente novamente.");
       return false;
     }
   }
@@ -348,7 +333,7 @@ export default function Home() {
       syncAfterMutation();
       return true;
     } catch (error) {
-      reportMutationError(error, "Não foi possível atualizar o aluno no Supabase.");
+      reportMutationError(error, "Não foi possível atualizar o aluno.");
       return false;
     }
   }
@@ -398,7 +383,7 @@ export default function Home() {
       setStorageError("");
       syncAfterMutation();
     } catch (error) {
-      reportMutationError(error, "Não foi possível remover o aluno no Supabase.");
+      reportMutationError(error, "Não foi possível remover o aluno.");
     }
   }
   async function persistLessons(lessons: Lesson[]) {
@@ -420,7 +405,7 @@ export default function Home() {
       syncAfterMutation();
       return true;
     } catch (error) {
-      reportMutationError(error, "Não foi possível salvar no Supabase. Tente novamente.");
+      reportMutationError(error, "Não foi possível salvar. Tente novamente.");
       return false;
     }
   }
@@ -437,7 +422,7 @@ export default function Home() {
       syncAfterMutation();
       return true;
     } catch (error) {
-      reportMutationError(error, "Não foi possível atualizar a aula no Supabase.");
+      reportMutationError(error, "Não foi possível atualizar a aula.");
       return false;
     }
   }
@@ -452,7 +437,7 @@ export default function Home() {
       syncAfterMutation();
       return true;
     } catch (error) {
-      reportMutationError(error, "Não foi possível remover a aula no Supabase.");
+      reportMutationError(error, "Não foi possível remover a aula.");
       return false;
     }
   }
@@ -608,7 +593,7 @@ export default function Home() {
       setStorageError("");
       syncAfterMutation();
     } catch (error) {
-      reportMutationError(error, "Não foi possível remanejar o aluno no Supabase.");
+      reportMutationError(error, "Não foi possível remanejar o aluno.");
     }
   }
   async function persistPlan(plan: Plan) {
@@ -626,7 +611,7 @@ export default function Home() {
       setStorageError("");
       syncAfterMutation();
     } catch (error) {
-      reportMutationError(error, "Não foi possível salvar o plano no Supabase.");
+      reportMutationError(error, "Não foi possível salvar o plano.");
     }
   }
   function go(next: View) {
@@ -666,18 +651,6 @@ export default function Home() {
 
   function exportData() {
     downloadBackup(data, `agenda-facil-${today}.json`);
-  }
-
-  async function chooseBackup(file?: File) {
-    if (!file) return;
-    try {
-      const parsed: unknown = JSON.parse(await file.text());
-      if (!isAppData(parsed)) throw new Error("Arquivo não contém um backup válido do Agenda Fácil.");
-      setMigrationSource(parsed);
-      setMigrationMessage("Backup pronto para importar. Confira os totais antes de continuar.");
-    } catch (error) {
-      setMigrationMessage(error instanceof Error ? error.message : "Não foi possível ler o arquivo.");
-    }
   }
 
   const activeStudents = useMemo(
@@ -721,9 +694,6 @@ export default function Home() {
   );
   const activeCount = activeStudents.filter(
     (student) => student.status === "active",
-  ).length;
-  const scheduledCount = data.lessons.filter(
-    (lesson) => lesson.status === "scheduled",
   ).length;
   const openInvoices = data.invoices.filter(
     (invoice) => invoice.status === "open",
@@ -778,9 +748,9 @@ export default function Home() {
           </button>
         </div>
         <div className="workspace-switcher">
-          <span className="workspace-avatar">AF</span>
+          <span className="workspace-avatar">{initials(teacherName)}</span>
           <span className="workspace-copy">
-            <strong>Meu espaço</strong>
+            <strong title={teacherName}>{teacherName}</strong>
             <small>Área do professor</small>
           </span>
         </div>
@@ -811,10 +781,10 @@ export default function Home() {
             <span>Configurações</span>
           </button>
           <div className="profile-row">
-            <span className="profile-avatar">AF</span>
+            <span className="profile-avatar">{initials(teacherName)}</span>
             <span className="profile-copy">
-              <strong>Área do professor</strong>
-              <small>Dados sincronizados</small>
+              <strong title={teacherName}>{teacherName}</strong>
+              <small>Área do professor</small>
             </span>
           </div>
         </div>
@@ -842,9 +812,6 @@ export default function Home() {
             <strong>{viewTitles[view]}</strong>
           </div>
           <div className="topbar-actions">
-            <span className="storage-pill">
-              <span /> Supabase
-            </span>
             <button className="sign-out-button" type="button" onClick={signOut}>Sair</button>
             <button
               className="top-action"
@@ -909,11 +876,6 @@ export default function Home() {
                       <span>Alunos ativos</span>
                       <strong>{activeCount}</strong>
                       <small>{activeStudents.length} no cadastro</small>
-                    </article>
-                    <article className="stat-card">
-                      <span>Aulas agendadas</span>
-                      <strong>{scheduledCount}</strong>
-                      <small>Todos os dias</small>
                     </article>
                   </section>
                   <section className="content-panel">
@@ -1381,28 +1343,8 @@ export default function Home() {
                     <div>
                       <p className="eyebrow">Área do professor</p>
                       <h1>Configurações</h1>
-                      <p>Faça backup e importe dados antigos quando precisar.</p>
+                      <p>Faça backup dos dados da sua agenda.</p>
                     </div>
-                  </section>
-                  <section className="content-panel migration-panel">
-                    <div>
-                      <h2>Importar dados antigos</h2>
-                      <p>Escolha um backup JSON ou use os dados encontrados neste navegador. A importação não apaga o backup local.</p>
-                    </div>
-                    <label className="field">
-                      Arquivo de backup
-                      <input type="file" accept=".json,application/json" onChange={(event) => void chooseBackup(event.target.files?.[0])} />
-                    </label>
-                    {migrationSource && (
-                      <div className="migration-summary">
-                        <p>{migrationSource.students.length} alunos · {migrationSource.lessons.length} aulas · {migrationSource.invoices.length} cobranças</p>
-                        <div className="migration-actions">
-                          <button className="secondary-button" type="button" onClick={() => downloadBackup(migrationSource, `agenda-facil-local-${today}.json`)}>Baixar backup antes</button>
-                          <button className="primary-button" type="button" disabled={migrationBusy} onClick={() => void importLocalData(migrationSource)}>{migrationBusy ? "Importando…" : "Importar para Supabase"}</button>
-                        </div>
-                      </div>
-                    )}
-                    {migrationMessage && <p className="auth-message" role="status">{migrationMessage}</p>}
                   </section>
                   <section className="content-panel settings-panel">
                     <div>
@@ -1505,9 +1447,6 @@ export default function Home() {
         </main>
         <footer className="page-footer">
           <span>Agenda Fácil</span>
-          <span>
-            Dados sincronizados com Supabase.
-          </span>
         </footer>
       </div>
       <nav className="mobile-nav" aria-label="Navegação móvel">
